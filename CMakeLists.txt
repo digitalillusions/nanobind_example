@@ -31,7 +31,15 @@ find_package(Python 3.8
   OPTIONAL_COMPONENTS Development.SABIModule)
 
 # Import nanobind through CMake's find_package mechanism
-find_package(nanobind CONFIG REQUIRED)
+# find_package(nanobind CONFIG REQUIRED)
+include(FetchContent)
+FetchContent_Declare(
+  nanobind
+  GIT_REPOSITORY https://github.com/wjakob/nanobind.git
+  GIT_TAG        v1.9.2
+)
+
+FetchContent_MakeAvailable(nanobind)
 
 # We are now ready to compile the actual extension module
 nanobind_add_module(
@@ -54,6 +62,8 @@ nanobind_add_module(
   # Source code goes here
   src/nanobind_example_ext.cpp
 )
+
+target_include_directories(nanobind_example_ext PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/eigen)
 
 # Install directive for scikit-build-core
 install(TARGETS nanobind_example_ext LIBRARY DESTINATION nanobind_example)
